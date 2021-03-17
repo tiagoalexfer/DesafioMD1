@@ -1,18 +1,14 @@
 const baseUrl = "http://localhost:3000";
 let employees = [];
 let roles = [];
-const listEl = document.querySelector("ul");
+let roleSelected = [];
 let tbody = document.querySelector("tbody");
 const selectOrder = document.querySelector("select");
 
 async function init() {
   [employees, roles] = await Promise.all([listEmployees(), listRoles()]);
-  employees.sort((a, b) => {
-    return a.name > b.name ? 1 : b.name > a.name ? -1 : 0;
-  });
   renderRoles();
-  renderData();
-  selectOrder.addEventListener("change", SortyBy);
+  SortyBy();
 }
 init();
 
@@ -39,9 +35,9 @@ function listRoles() {
   return fetchJson(`${baseUrl}/roles`);
 }
 
-function renderData() {
+function renderData(newEmployees) {
   tbody.innerHTML = "";
-  for (const employee of employees) {
+  for (const employee of newEmployees) {
     let role = roles.find((role) => role.id == employee.role_id);
     const tr = document.createElement("tr");
     const tdId = document.createElement("td");
@@ -58,20 +54,19 @@ function renderData() {
     tr.appendChild(tdSalary);
     tbody.appendChild(tr);
   }
+  document.querySelector('#listaEmp h2').textContent = `Employees (${newEmployees.length})`
 }
 
 function renderRoles() {
-  for (const role of roles) {
-    const li = document.createElement("li");
-    const input = document.createElement("input");
-    const label = document.createElement("label");
-    input.type = "checkbox";
-    input.value = role.id;
-    label.textContent = role.name;
 
-    label.appendChild(input);
-    li.appendChild(label);
-    listEl.appendChild(li);
+  for (const role of roles) {
+    let checkBox = document.querySelector('fieldset .filtro').cloneNode(true);
+    checkBox.style = 'block';
+    checkBox.querySelector('div .role').setAttribute('name', role.id)
+    checkBox.querySelector('div .role').setAttribute('id', role.id)
+    checkBox.querySelector('div  label').setAttribute('for', role.id)
+    checkBox.querySelector('div  label').innerText = role.name
+    document.querySelector('fieldset').appendChild(checkBox)
   }
 }
 function showError(message, error) {
@@ -85,25 +80,39 @@ function clearError() {
   document.getElementById("errors").textContent = "";
 }
 
-async function SortyBy(evt) {
-  // evt.preventDefault();
-
-  if (evt.target.value == "ND") {
-    employees.sort((a, b) => {
-      return a.name > b.name ? -1 : b.name > a.name ? 1 : 0; //DESC
-    });
-  } else if (evt.target.value == "SA") {
-    employees.sort((a, b) => {
-      return a.salary > b.salary ? 1 : b.salary > a.salary ? -1 : 0; //ASC
-    });
-  } else if (evt.target.value == "SD") {
-    employees.sort((a, b) => {
-      return a.salary > b.salary ? -1 : b.salary > a.salary ? 1 : 0; //DESC
-    });
+function SortyBy() {
+  let dadoSelecionado = selectOrder.value
+  let newEmployees = [];
+  if (roleSelected.length) {
+    newEmployees = [...employees.filter(ordenar => roleSelected.includes(ordenar['role_id'].toString()))];
+    if (dadoSelecionado == "ND") {
+      newEmployees.sort((a, b) => a.name > b.name ? -1 : 1);
+    } else if (dadoSelecionado == "SA") {
+      newEmployees.sort((a, b) => a.salary > b.salary ? 1 : -1);
+    } else if (dadoSelecionado == "SD") {
+      newEmployees.sort((a, b) => a.salary > b.salary ? -1 : 1);
+    } else {
+      newEmployees.sort((a, b) => a.name > b.name ? 1 : -1);
+    }
+    renderData(newEmployees);
   } else {
-    employees.sort((a, b) => {
-      return a.name > b.name ? 1 : b.name > a.name ? -1 : 0; //ASC
-    });
+
+    if (dadoSelecionado == "ND") {
+      employees.sort((a, b) => a.name > b.name ? -1 : 1);
+    } else if (dadoSelecionado == "SA") {
+      employees.sort((a, b) => a.salary > b.salary ? 1 : -1);
+    } else if (dadoSelecionado == "SD") {
+      employees.sort((a, b) => a.salary > b.salary ? -1 : 1);
+    } else {
+      employees.sort((a, b) => a.name > b.name ? 1 : -1);
+    }
+    renderData(employees);
   }
-  renderData();
+}
+function FilterChecked() {
+  roleSelected = [...document.querySelectorAll('.role')]
+    .filter(el => el.checked)
+    .map(el => el.name);
+  // console.log(roleSelected);
+  document.querySelector('select').addEventListener('change', SortyBy());
 }

@@ -1,31 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista de Employees</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div id="app">
-      <div id="errors"></div>
-      <div id="options">
-        <h2>Options</h2>
-        <label>Sort By </label>
-        <select>
-          <option value="NA">Nome ascendente</option>
-          <option value="ND">Nome descendente</option>
-          <option value="SA">Salário ascendente</option>
-          <option value="SD">Salário descendente</option>
-        </select>
-        <fieldset id="roleList">
-          <legend>Filter by roles</legend>
-          <ul></ul>
-        </fieldset>
-      </div>
-      <div id="listaEmp">
-        <h2>Employees <span id="TotalFiltro"></span></h2>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Employees</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="app">
+    <div id="errors"></div>
+    <div id="options">
+      <h2>Options</h2>
+      <label>Sort By </label>
+      <select name="ordernacao" onchange="SortyBy()">
+        <option value="NA" selected>Nome ascendente</option>
+        <option value="ND">Nome descendente</option>
+        <option value="SA">Salário ascendente</option>
+        <option value="SD">Salário descendente</option>
+      </select>
+      <fieldset>
+        <legend>Filter by roles</legend>
+        <div style="display: none" class="filtro">
+          <div>
+            <input onchange="FilterChecked()" class="role" name="" type="checkbox" />
+            <label></label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div id="listaEmp">
+      <h2>Employees</h2>
+      <div class="EmpTabela">
         <table>
           <thead>
             <tr>
@@ -39,6 +47,8 @@
         </table>
       </div>
     </div>
-    <script src="script.js"></script>
-  </body>
+  </div>
+  <script src="script.js"></script>
+</body>
+
 </html>
