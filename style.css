@@ -1,0 +1,50 @@
+html
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+body {
+    margin: 0;   
+  }
+
+#app {
+    display: flex;
+     justify-content: center;
+    background-color: #fff;
+    padding: 8px;    
+  }
+ #options{
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  #listaEmp{
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+th,
+td {
+  padding-left: 8px;
+  text-align: right;
+ 
+}
+table{
+    border: 5px solid #000;
+    border-radius: 5px;
+
+}
+th:first-child,
+td:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+tr:nth-child(even) {background: #fff}
+tr:nth-child(odd) {background: #CCC}
